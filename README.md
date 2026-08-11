@@ -1,2 +1,2 @@
-# Graph_Analysis
-graph analysis
+# Graph Mining
+graph Mining
