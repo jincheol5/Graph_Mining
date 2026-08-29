@@ -85,11 +85,15 @@ class DataUtils:
             graph_df: pd.DataFrame
         """
         graph_path=os.path.join(DataUtils.base_path,"temporal_graph",dataset_name,f"ml_{dataset_name}.csv")
-        graph_df=pd.read_csv(
-            graph_path,
-            index_col=0,
-        )[["u","i","ts","idx"]].rename(
-            columns={"ts": "t"}
+        graph_df=(
+            pd.read_csv(graph_path,index_col=0)[["u","i","ts","idx"]]
+            .rename(columns={"ts": "t"})
+            .astype({
+                "u": int,
+                "i": int,
+                "t": float,
+                "idx": int,
+            })
         )
 
         ### remove self-loop

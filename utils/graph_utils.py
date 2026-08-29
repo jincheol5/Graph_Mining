@@ -2,14 +2,11 @@ import pandas as pd
 import networkx as nx
 from typing import Literal
 
-class TemporalGraphUtils:
+class GraphUtils:
     @staticmethod
-    def convert_to_nx_graph(
+    def convert_temporal_graph_df_to_nx_graph(
             graph_df:pd.DataFrame,
-            graph_type:Literal[
-                "directed",
-                "undirected"
-            ]
+            directed:bool=False
         ):
         """
         Input:
@@ -17,9 +14,9 @@ class TemporalGraphUtils:
         Return:
             graph: nx.MultiGraph or nx.MultiDiGraph, key=timestamp, attr=edge_id 
         """
-        if graph_type=="directed":
+        if directed:
             graph=nx.MultiDiGraph()
-        if graph_type=="undirected":
+        else:
             graph=nx.MultiGraph()
         for row in graph_df.itertuples(index=False):
             graph.add_edge(
