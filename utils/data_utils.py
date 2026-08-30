@@ -5,6 +5,7 @@ from typing import Literal
 
 class DataUtils:
     base_path=os.path.join("..","data")
+
     @staticmethod
     def preprocess_SNAP_temporal_graph_dataset(
             dataset_name:Literal[
@@ -19,7 +20,7 @@ class DataUtils:
         """
         match dataset_name:
             case "CollegeMsg":
-                dataset_path=os.path.join(DataUtils.base_path,"temporal_graph",dataset_name,f"raw_{dataset_name}.txt")
+                dataset_path=os.path.join(DataUtils.base_path,"temporal_graph",dataset_name,f"{dataset_name}.txt")
                 graph_df=pd.read_csv(
                     dataset_path,
                     header=None,
@@ -28,7 +29,7 @@ class DataUtils:
                     names=["u","i","t"],
                 )
             case "bitcoin-otc"|"bitcoin-alpha":
-                dataset_path=os.path.join(DataUtils.base_path,"temporal_graph",dataset_name,f"raw_{dataset_name}.csv")
+                dataset_path=os.path.join(DataUtils.base_path,"temporal_graph",dataset_name,f"{dataset_name}.csv")
                 graph_df=pd.read_csv(
                     dataset_path,
                     header=None,
