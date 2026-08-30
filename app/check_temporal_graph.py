@@ -19,7 +19,7 @@ def app(**kwargs):
         directed=kwargs["directed"],
         bipartite=kwargs["bipartite"]
     )
-    print(f"Dataset Name: {kwargs['dataset_name']}")
+    print(f"Preprocessed Dataset Name: {kwargs['dataset_name']}")
     print(f"Is Directed?: {kwargs['directed']}")
     print(f"Is Bipartite?: {kwargs['bipartite']}")
     print(f"Number of Node: {graph.get_num_node()}")

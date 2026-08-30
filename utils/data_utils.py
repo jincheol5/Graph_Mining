@@ -44,11 +44,32 @@ class DataUtils:
         # 자료형 변환
         graph_df["u"]=graph_df["u"].astype(int)
         graph_df["i"]=graph_df["i"].astype(int)
-        graph_df["t"]=graph_df["t"].astype(float)
+        # SNAP timestamp를 Unix timestamp(초) 정수로 변환
+        graph_df["t"]=(
+            pd.to_datetime(
+                pd.to_numeric(graph_df["t"],errors="raise"),
+                unit="s",
+                utc=True,
+            )
+            .astype("int64")
+            .floordiv(1_000_000_000)
+            .astype(np.int64)
+        )
 
         # self-loop 제거
         self_loop_mask=graph_df["u"]==graph_df["i"]
         graph_df=graph_df.loc[~self_loop_mask].copy()
+
+        # 동일한 시각의 동일한 방향 edge(u -> i)는 하나만 유지
+        graph_df=(
+            graph_df
+            .drop_duplicates(subset=["u","i","t"],keep="first")
+            .reset_index(drop=True)
+        )
+
+        # 첫 interaction 시각을 0으로 맞춤
+        if not graph_df.empty:
+            graph_df["t"]=graph_df["t"]-graph_df["t"].min()
 
         # 모든 node ID 수집
         node_ids=sorted(
@@ -91,7 +112,7 @@ class DataUtils:
             .astype({
                 "u": int,
                 "i": int,
-                "t": float,
+                "t": int,
                 "idx": int,
             })
         )
