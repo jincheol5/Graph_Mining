@@ -44,15 +44,10 @@ class DataUtils:
         # 자료형 변환
         graph_df["u"]=graph_df["u"].astype(int)
         graph_df["i"]=graph_df["i"].astype(int)
-        # SNAP timestamp를 Unix timestamp(초) 정수로 변환
+        # SNAP timestamp(초)를 Unix timestamp의 일(day) 단위 정수로 변환
         graph_df["t"]=(
-            pd.to_datetime(
-                pd.to_numeric(graph_df["t"],errors="raise"),
-                unit="s",
-                utc=True,
-            )
-            .astype("int64")
-            .floordiv(1_000_000_000)
+            pd.to_numeric(graph_df["t"],errors="raise")
+            .floordiv(24*60*60)
             .astype(np.int64)
         )
 
@@ -112,16 +107,27 @@ class DataUtils:
             .astype({
                 "u": int,
                 "i": int,
-                "t": int,
                 "idx": int,
             })
         )
 
-        ### remove self-loop
+        # timestamp(초)를 Unix timestamp의 일(day) 단위 정수로 변환
+        graph_df["t"]=(
+            pd.to_numeric(graph_df["t"],errors="raise")
+            .floordiv(24*60*60)
+            .astype(np.int64)
+        )
+
+        ### remove self-loop, 동일한 시각의 동일한 방향 edge(u -> i)는 하나만 유지
         graph_df=(
             graph_df[graph_df["u"]!=graph_df["i"]]
+            .drop_duplicates(subset=["u","i","t"],keep="first")
             .reset_index(drop=True)
         )
+
+        # 첫 interaction 날짜를 0으로 맞춤
+        if not graph_df.empty:
+            graph_df["t"]=graph_df["t"]-graph_df["t"].min()
 
         ### remap edge index
         graph_df["idx"]=np.arange(1,len(graph_df)+1)
