@@ -25,9 +25,10 @@ def app(**kwargs):
     print(f"Number of Node: {graph.get_num_node()}")
     print(f"Number of Edge Events: {graph.get_num_edge_event()}")
     print(f"Number of Static Edge: {graph.get_num_static_edge()}")
-    timestamp_result=graph.get_min_max_timestamp()
-    print(f"Min Timestamp: {timestamp_result['min_t']}")
-    print(f"Max Timestamp: {timestamp_result['max_t']}")
+    print(f"Min Timestamp: {graph.get_timestamp_info(info_type='min')}")
+    print(f"Median Timestamp: {graph.get_timestamp_info(info_type='median')}")
+    print(f"Max Timestamp: {graph.get_timestamp_info(info_type='max')}")
+    print(f"Inductive node in test eventstream: {graph.check_inductivity()}")
 
 if __name__=="__main__":
     """
@@ -39,8 +40,8 @@ if __name__=="__main__":
         choices=["CollegeMsg","bitcoin-alpha","bitcoin-otc","enron"],
         default=f"CollegeMsg"
     )
-    parser.add_argument("--directed",type=bool,default=True)
-    parser.add_argument("--bipartite",type=bool,default=False)
+    parser.add_argument("--directed",type=int,default=1)
+    parser.add_argument("--bipartite",type=int,default=0)
     args=parser.parse_args()
     app_config={
         "dataset_name":args.dataset_name,
