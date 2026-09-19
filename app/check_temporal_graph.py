@@ -9,18 +9,13 @@ def app(**kwargs):
     graph_df=DataUtils.preprocess_temporal_graph_dataset(
         dataset_name=kwargs["dataset_name"]
     )
-    nx_graph=GraphUtils.convert_temporal_graph_df_to_nx_graph(
-        graph_df=graph_df,
-        directed=kwargs["directed"]
-    )
+    nx_graph=GraphUtils.convert_temporal_graph_df_to_nx_graph(graph_df=graph_df)
     graph=TemporalGraph(
         graph_df=graph_df,
         graph=nx_graph,
-        directed=kwargs["directed"],
         bipartite=kwargs["bipartite"]
     )
     print(f"Preprocessed Dataset Name: {kwargs['dataset_name']}")
-    print(f"Is Directed?: {kwargs['directed']}")
     print(f"Is Bipartite?: {kwargs['bipartite']}")
     print(f"Number of Node: {graph.get_num_node()}")
     print(f"Number of Edge Events: {graph.get_num_edge_event()}")
@@ -40,12 +35,10 @@ if __name__=="__main__":
         choices=["CollegeMsg","bitcoin-alpha","bitcoin-otc","enron"],
         default=f"CollegeMsg"
     )
-    parser.add_argument("--directed",type=int,default=1)
     parser.add_argument("--bipartite",type=int,default=0)
     args=parser.parse_args()
     app_config={
         "dataset_name":args.dataset_name,
-        "directed":args.directed,
         "bipartite":args.bipartite
     }
     app(**app_config)
