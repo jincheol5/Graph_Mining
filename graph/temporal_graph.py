@@ -16,6 +16,13 @@ class TemporalGraph:
         self.max_t=graph_df["t"].max()
         self.edge_events=[]
 
+        ### convert to networkx graph
+        self.graph=self.convert_df_to_nx_graph(graph_df=graph_df)
+        self.n_node=self.graph.number_of_nodes()
+        self.n_edge_event=self.graph.number_of_edges()
+        self.static_graph=nx.DiGraph(self.graph)
+        self.n_static_edge=self.graph.number_of_edges()
+
         ### out_adj for algorithm
         out_adj=[[] for _ in range(self.n_node+1)]
         out_adj_edge=[[] for _ in range(self.n_node+1)]
@@ -47,13 +54,6 @@ class TemporalGraph:
             np.asarray(values,dtype=np.float64)
             for values in out_adj_t
         ]
-
-        ### convert to networkx graph
-        self.graph=self.convert_df_to_nx_graph(graph_df=graph_df)
-        self.n_node=self.graph.number_of_nodes()
-        self.n_edge_event=self.graph.number_of_edges()
-        self.static_graph=nx.DiGraph(self.graph)
-        self.n_static_edge=self.graph.number_of_edges()
 
     def convert_df_to_nx_graph(self,graph_df:pd.DataFrame):
         """

@@ -121,9 +121,7 @@ class GraphAnalysis:
         if hops.numel()==0:
             return {
                 "min_hop":None,
-                "n_min_hop":0,
                 "max_hop":None,
-                "n_max_hop":0,
                 "mean_hop":None
             }
 

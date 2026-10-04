@@ -9,7 +9,7 @@ def app(**kwargs):
     graph_df=DataUtils.load_temporal_graph_df(dataset_name=kwargs["dataset_name"])
     graph=TemporalGraph(graph_df=graph_df)
     print(f"Preprocessed Dataset Name: {kwargs['dataset_name']}")
-    print(f"Is Bipartite?: {kwargs['bipartite']}")
+    print(f"Is Bipartite?: {graph.bipartite}")
     print(f"Number of Node: {graph.n_node}")
     print(f"Number of Edge Events: {graph.n_edge_event}")
     print(f"Number of Static Edge: {graph.n_static_edge}")

@@ -11,13 +11,6 @@ def app(**kwargs):
     dataset_name=kwargs["dataset_name"]
     source=kwargs["source"]
 
-    ### load graph_df and create TemporalGraph
-    graph_df=DataUtils.load_temporal_graph_df(dataset_name=dataset_name)
-    graph=TemporalGraph(
-        graph_df=graph_df,
-        bipartite=kwargs["bipartite"]
-    )
-
     ### load TR_result
     train_TR_result=DataUtils.load_TR_result(
         dataset_name=dataset_name,

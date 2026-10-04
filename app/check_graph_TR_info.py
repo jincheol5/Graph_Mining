@@ -10,13 +10,6 @@ def app(**kwargs):
     ### get app parameter 
     dataset_name=kwargs["dataset_name"]
 
-    ### load graph_df and create TemporalGraph
-    graph_df=DataUtils.load_temporal_graph_df(dataset_name=dataset_name)
-    graph=TemporalGraph(
-        graph_df=graph_df,
-        bipartite=kwargs["bipartite"]
-    )
-
     ### load TR_result
     train_TR_result=DataUtils.load_TR_result(
         dataset_name=dataset_name,
@@ -67,9 +60,7 @@ def app(**kwargs):
     ) 
     print(f"Dataset {dataset_name} All eventstream, All node의 TR hop 정보:")
     print(f"min_hop: {TR_hop_info['min_hop']}")
-    print(f"n_min_hop: {TR_hop_info['n_min_hop']}")
     print(f"max_hop: {TR_hop_info['max_hop']}")
-    print(f"n_max_hop: {TR_hop_info['n_max_hop']}")
     print(f"mean_hop: {TR_hop_info['mean_hop']}",end="\n\n")
 
 if __name__=="__main__":
