@@ -1,11 +1,11 @@
 import os
 import pandas as pd
 import numpy as np
+import torch
 from typing import Literal
 
+BASE_PATH=os.path.join("..","data")
 class DataUtils:
-    base_path=os.path.join("..","data")
-
     @staticmethod
     def preprocess_SNAP_temporal_graph_dataset(
             dataset_name:Literal[
@@ -20,7 +20,7 @@ class DataUtils:
         """
         match dataset_name:
             case "CollegeMsg":
-                dataset_path=os.path.join(DataUtils.base_path,"temporal_graph",dataset_name,f"{dataset_name}.txt")
+                dataset_path=os.path.join(BASE_PATH,"temporal_graph",dataset_name,f"{dataset_name}.txt")
                 graph_df=pd.read_csv(
                     dataset_path,
                     header=None,
@@ -29,7 +29,7 @@ class DataUtils:
                     names=["u","i","t"],
                 )
             case "bitcoin-otc"|"bitcoin-alpha":
-                dataset_path=os.path.join(DataUtils.base_path,"temporal_graph",dataset_name,f"{dataset_name}.csv")
+                dataset_path=os.path.join(BASE_PATH,"temporal_graph",dataset_name,f"{dataset_name}.csv")
                 graph_df=pd.read_csv(
                     dataset_path,
                     header=None,
@@ -102,7 +102,7 @@ class DataUtils:
         Return:
             graph_df: pd.DataFrame
         """
-        graph_path=os.path.join(DataUtils.base_path,"temporal_graph",dataset_name,f"ml_{dataset_name}.csv")
+        graph_path=os.path.join(BASE_PATH,"temporal_graph",dataset_name,f"ml_{dataset_name}.csv")
         graph_df=(
             pd.read_csv(graph_path,index_col=0)[["u","i","ts","idx"]]
             .rename(columns={"ts": "t"})
@@ -149,7 +149,7 @@ class DataUtils:
         return graph_df
 
     @staticmethod
-    def preprocess_temporal_graph_dataset(
+    def load_temporal_graph_df(
             dataset_name:Literal[
                 "CollegeMsg",
                 "bitcoin-otc",
@@ -158,7 +158,7 @@ class DataUtils:
                 "wikipedia",
                 "reddit"
             ]
-        ):
+        )->pd.DataFrame:
         """
         Return:
             graph_df: pd.DataFrame
@@ -166,5 +166,21 @@ class DataUtils:
         match dataset_name:
             case "CollegeMsg"|"bitcoin-otc"|"bitcoin-alpha":
                 return DataUtils.preprocess_SNAP_temporal_graph_dataset(dataset_name=dataset_name)
-            case "enron"|"wikipedia"|"reddit":
+            case "enron":
                 return DataUtils.preprocess_ZENODO_temporal_graph_dataset(dataset_name=dataset_name)
+
+    @staticmethod
+    def load_TR_result(
+            dataset_name:Literal[
+                "enron",
+                "CollegeMsg",
+                "bitcoin-alpha",
+                "bitcoin-otc"
+            ],
+            purpose:Literal["train","val","test"],
+            batch_size:int
+        )->dict[str,torch.Tensor]:
+        file_name=f"{dataset_name}_{purpose}_B{batch_size}.pt"
+        file_path=os.path.join(BASE_PATH,"TR-GNN","TR_result",dataset_name,purpose,file_name)
+        TR_result=torch.load(file_path)
+        return TR_result
